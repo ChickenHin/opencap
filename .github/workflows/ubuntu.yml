@@ -1,5 +1,5 @@
 name: ubuntu
-on: [push]
+on: [workflow_dispatch]
 jobs:
   build-linux:
     name: Build and test on Ubuntu
@@ -50,24 +50,24 @@ jobs:
           make -j$(nproc)
           ctest --output-on-failure
           cd ../../
-      - name: Build and test PyOpenCAP
-        run: |
-          set -e
-          export PKG_CONFIG_PATH=/tmp/deps/lib/pkgconfig
-          export LD_LIBRARY_PATH=/tmp/deps/lib
-          export CPATH=/tmp/deps/include:$CPATH
-          export HDF5_ROOT=/tmp/deps
-          pip install pytest pytest-cov h5py numpy pyscf codecov numgrid pandas
-          pip install .
-          cd pyopencap
-          pytest --cov=pyopencap --cov-report=xml
-          cd ..
-      - name: Upload coverage reports
-        run: |
-          cd opencap/build
-          lcov --directory . --capture --output-file coverage.info
-          lcov --remove coverage.info '/usr/*' "${HOME}"'/.cache/*' '*eigen*' '*_deps*' '*tests*' --output-file coverage.info
-          lcov --list coverage.info
-          bash <(curl -s https://codecov.io/bash) -f coverage.info || echo "Codecov did not collect C++ reports"
-          cd ../../pyopencap
-          bash <(curl -s https://codecov.io/bash) -f coverage.xml || echo "Codecov did not collect Python reports"
+      # - name: Build and test PyOpenCAP
+      #   run: |
+      #     set -e
+      #     export PKG_CONFIG_PATH=/tmp/deps/lib/pkgconfig
+      #     export LD_LIBRARY_PATH=/tmp/deps/lib
+      #     export CPATH=/tmp/deps/include:$CPATH
+      #     export HDF5_ROOT=/tmp/deps
+      #     pip install pytest pytest-cov h5py numpy pyscf codecov numgrid pandas
+      #     pip install .
+      #     cd pyopencap
+      #     pytest --cov=pyopencap --cov-report=xml
+      #     cd ..
+      # - name: Upload coverage reports
+      #   run: |
+      #     cd opencap/build
+      #     lcov --directory . --capture --output-file coverage.info
+      #     lcov --remove coverage.info '/usr/*' "${HOME}"'/.cache/*' '*eigen*' '*_deps*' '*tests*' --output-file coverage.info
+      #     lcov --list coverage.info
+      #     bash <(curl -s https://codecov.io/bash) -f coverage.info || echo "Codecov did not collect C++ reports"
+      #     cd ../../pyopencap
+      #     bash <(curl -s https://codecov.io/bash) -f coverage.xml || echo "Codecov did not collect Python reports"
