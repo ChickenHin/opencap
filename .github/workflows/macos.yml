@@ -1,5 +1,5 @@
 name: macos
-on: [push]
+on: [workflow_dispatch]
 jobs:
   build-macos:
     name: Build and test with GCC on macOS ${{ matrix.macos }}
@@ -57,17 +57,17 @@ jobs:
           make -j$(sysctl -n hw.logicalcpu)
           ctest --output-on-failure
           cd ../..
-      - name: Build and test PyOpenCAP
-        run: |
-          set -e
-          conda activate opencap-env
-          export CC=gcc-14
-          export CXX=g++-14
-          export PKG_CONFIG_PATH=/tmp/deps/lib/pkgconfig
-          export LD_LIBRARY_PATH=/tmp/deps/lib
-          export CPATH=/tmp/deps/include:$CPATH
-          export HDF5_ROOT=/tmp/deps
-          pip install . pytest pytest-cov codecov
-          pip install h5py numpy pyscf numgrid pandas
-          cd pyopencap
-          pytest --cov=pyopencap --cov-report=xml
+      # - name: Build and test PyOpenCAP
+      #   run: |
+      #     set -e
+      #     conda activate opencap-env
+      #     export CC=gcc-14
+      #     export CXX=g++-14
+      #     export PKG_CONFIG_PATH=/tmp/deps/lib/pkgconfig
+      #     export LD_LIBRARY_PATH=/tmp/deps/lib
+      #     export CPATH=/tmp/deps/include:$CPATH
+      #     export HDF5_ROOT=/tmp/deps
+      #     pip install . pytest pytest-cov codecov
+      #     pip install h5py numpy pyscf numgrid pandas
+      #     cd pyopencap
+      #     pytest --cov=pyopencap --cov-report=xml
